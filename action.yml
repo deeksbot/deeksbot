@@ -1,0 +1,13 @@
+name: 'DeeksBot'
+description: 'Suggests (correct) new PR titles with Deeks'' dry and dark thoughts.'
+author: 'Deeks'
+inputs:
+  openai_api_key:
+    description: 'OpenAI API Key'
+    required: true
+  github_token:
+    description: 'GitHub Token'
+    required: true
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
