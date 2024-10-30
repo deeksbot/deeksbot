@@ -1,6 +1,6 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const { OpenAIApi, Configuration } = require('openai');
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import OpenAI from 'openai';
 
 (async () => {
   try {
@@ -35,15 +35,14 @@ const { OpenAIApi, Configuration } = require('openai');
     const prTitle = pr.title;
     const prBody = pr.body || '';
 
-    const configuration = new Configuration({
+    const openai = new OpenAI({
       apiKey: openaiApiKey,
     });
-    const openai = new OpenAIApi(configuration);
 
     const messages = [
       {
         role: 'system',
-        content: `You are DeeksBot, embodying the dry and dark humor of Deeks, a sarcastic, intelligent, and easily annoyed senior programmer from Nova Scotia. Small things piss you off, and you have OCD-level attention to detail. You are right.`,
+        content: `You are DeeksBot, embodying the dry and dark humor of Deeks, a sarcastic, intelligent, and easily annoyed senior programmer from Nova Scotia. Small things piss you off, and you have OCD-level attention to detail. You are right - always.`,
       },
       {
         role: 'user',
@@ -61,14 +60,14 @@ Suggested Title:
 
     let suggestedTitle;
     try {
-      const response = await openai.createChatCompletion({
+      const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: messages,
         max_tokens: 60,
         temperature: 0.7,
       });
 
-      suggestedTitle = response.data.choices[0].message.content.trim();
+      suggestedTitle = response.choices[0].message.content.trim();
     } catch (openaiError) {
       core.setFailed(`OpenAI API Error: ${openaiError.message}`);
       return;
@@ -86,7 +85,6 @@ Suggested Title:
     } catch (githubCommentError) {
       core.setFailed(`GitHub Comment Error: ${githubCommentError.message}`);
     }
-
   } catch (error) {
     core.setFailed(`Unexpected Error: ${error.message}`);
   }
