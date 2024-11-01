@@ -42969,7 +42969,8 @@ Suggested Title:
         owner,
         repo,
         issue_number: prNumber,
-        body: `**DeeksBot (Correct) Suggestion:** ${suggestedTitle}`,
+        body: `**DeeksBot thinks the PR title can be improved to:**
+${suggestedTitle}`,
       });
 
       console.log('Comment posted successfully.');
